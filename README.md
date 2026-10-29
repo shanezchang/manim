@@ -14,6 +14,47 @@ Manim is an engine for precise programmatic animations, designed for creating ex
 
 Note, there are two versions of manim.  This repository began as a personal project by the author of [3Blue1Brown](https://www.3blue1brown.com/) for the purpose of animating those videos, with video-specific code available [here](https://github.com/3b1b/videos).  In 2020 a group of developers forked it into what is now the [community edition](https://github.com/ManimCommunity/manim/), with a goal of being more stable, better tested, quicker to respond to community contributions, and all around friendlier to get started with. See [this page](https://docs.manim.community/en/stable/faq/installation.html#different-versions) for more details.
 
+## Development with uv
+
+This checkout uses [uv](https://docs.astral.sh/uv/) to manage Python, its local
+`.venv`, and the dependencies in `uv.lock`. The development interpreter is pinned
+to Python 3.12 in `.python-version`; the package still declares Python 3.10+ support.
+
+On macOS, install the native dependencies with Homebrew:
+
+```sh
+brew install ffmpeg cairo pango pkg-config
+```
+
+LaTeX and `dvisvgm` are also needed for scenes that contain `Tex` or `TexText`.
+Install MacTeX or BasicTeX as described in the macOS instructions below.
+
+From the repository root:
+
+```sh
+uv sync --locked
+uv run --locked manimgl --version
+uv run --locked manimgl example_scenes.py OpeningManimExample
+```
+
+`uv sync` installs this checkout in editable mode, so changes to `manimlib` are
+available immediately. To render a video without opening the preview window:
+
+```sh
+uv run --locked manimgl example_scenes.py OpeningManimExample -w -l
+```
+
+Run the existing unit tests with:
+
+```sh
+uv run --locked pytest
+```
+
+Declare dependency changes with `uv add` (or `uv add --dev` for development tools)
+and commit both `pyproject.toml` and `uv.lock`. Use `uv lock --upgrade` to explicitly
+update locked dependencies. FFmpeg, LaTeX, and the native libraries remain system
+dependencies managed outside uv.
+
 ## Installation
 > [!Warning]
 > **WARNING:** These instructions are for ManimGL _only_. Trying to use these instructions to install [Manim Community/manim](https://github.com/ManimCommunity/manim) or instructions there to install this version will cause problems. You should first decide which version you wish to install, then only follow the instructions for your desired version.
